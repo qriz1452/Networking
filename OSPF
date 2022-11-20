@@ -1,126 +1,87 @@
-<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="OSPF_0"></a>OSPF</h1>
-<h2 class="code-line" data-line-start=1 data-line-end=2 ><a id="_What_is_OSPF__1"></a><em>What is OSPF</em></h2>
-<p class="has-line-data" data-line-start="3" data-line-end="4">Open shortest path first (OSPF) is a link-state routing protocol that is used to find the best path between the source and the destination router using its own shortest path first (SPF) algorithm.</p>
-<p class="has-line-data" data-line-start="5" data-line-end="6">The Interior Gateway Protocol (IGP), i.e., the protocol which aims at moving the packet within a large autonomous system or routing domain. It is a network layer protocol that works on protocol number 89 and uses AD value 110. OSPF uses multicast address 224.0.0.5 for normal communication and 224.0.0.6 for update to designated router(DR)/Backup Designated Router (BDR).</p>
-<ul>
-<li class="has-line-data" data-line-start="7" data-line-end="15">
-<h3 class="code-line" data-line-start=7 data-line-end=8 ><a id="Criteria__7"></a>Criteria :</h3>
-To form neighbourship in OSPF, there is a criterion for both the routers:
-<ul>
-<li class="has-line-data" data-line-start="9" data-line-end="10">It should be present in the same area.</li>
-<li class="has-line-data" data-line-start="10" data-line-end="11">The router I’d be unique.</li>
-<li class="has-line-data" data-line-start="11" data-line-end="12">The subnet mask should be the same.</li>
-<li class="has-line-data" data-line-start="12" data-line-end="13">Hello, and the dead timer should be the same.</li>
-<li class="has-line-data" data-line-start="13" data-line-end="14">The stub flag must match.</li>
-<li class="has-line-data" data-line-start="14" data-line-end="15">Authentication must match.</li>
-</ul>
-</li>
-</ul>
-<pre><code class="has-line-data" data-line-start="18" data-line-end="20" class="language-sh"> OSPF supports NULL, plain text, MD5 authentication
-</code></pre>
-<blockquote>
-<p class="has-line-data" data-line-start="20" data-line-end="21">Note –  Both the routers (neighbors) should have some type of authentication enabled. e.g- if one neighbor has MD5 authentication enabled then others should also have MD5 authentication enabled.</p>
-</blockquote>
-<h2 class="code-line" data-line-start=22 data-line-end=23 ><a id="OSPF_messages_22"></a>OSPF messages</h2>
-<p class="has-line-data" data-line-start="23" data-line-end="24">OSPF uses certain messages for the communication between the routers operating OSPF.</p>
-<ul>
-<li class="has-line-data" data-line-start="25" data-line-end="28">
-<p class="has-line-data" data-line-start="25" data-line-end="27">Hello message :<br>
-These are keep-alive messages used for neighbor discovery /recovery. These are exchanged every 10 seconds. This includes the following information: Router I’d, Hello/dead interval, Area I’d, Router priority, DR and BDR IP address, authentication data.</p>
-</li>
-<li class="has-line-data" data-line-start="28" data-line-end="30">
-<p class="has-line-data" data-line-start="28" data-line-end="30">Database Description (DBD) :<br>
-It is the OSPF route of the router. This contains the topology of an AS or an area (routing domain).</p>
-</li>
-<li class="has-line-data" data-line-start="30" data-line-end="32">
-<p class="has-line-data" data-line-start="30" data-line-end="32">Link state request (LSR) :<br>
-When a router receives DBD, it compares it with its own DBD. If the DBD received has some more updates than its own DBD then LSR is being sent to its neighbor.</p>
-</li>
-<li class="has-line-data" data-line-start="32" data-line-end="34">
-<p class="has-line-data" data-line-start="32" data-line-end="34">Link state update (LSU) :<br>
-When a router receives LSR, it responds with an LSU message containing the details requested.</p>
-</li>
-<li class="has-line-data" data-line-start="34" data-line-end="36">
-<p class="has-line-data" data-line-start="34" data-line-end="36">Link state acknowledgement :<br>
-This provides reliability to the link-state exchange process. It is sent as the acknowledgement of LSU.</p>
-</li>
-<li class="has-line-data" data-line-start="36" data-line-end="39">
-<p class="has-line-data" data-line-start="36" data-line-end="38">Link state advertisement (LSA) :<br>
-It is an OSPF data packet that contains link-state routing information, shared only with the routers to which adjacency has been formed.</p>
-</li>
-</ul>
-<h3 class="code-line" data-line-start=39 data-line-end=40 ><a id="Timers_39"></a>Timers</h3>
-<ul>
-<li class="has-line-data" data-line-start="40" data-line-end="43">Hello timer :<br>
-The interval in which the OSPF router sends a hello message on an interface.
-<blockquote>
-<p class="has-line-data" data-line-start="42" data-line-end="43">It is 10 seconds by default.</p>
-</blockquote>
-</li>
-<li class="has-line-data" data-line-start="43" data-line-end="46">Dead timer :<br>
-The interval in which the neighbor will be declared dead if it is not able to send the hello packet.
-<blockquote>
-<p class="has-line-data" data-line-start="45" data-line-end="46">It is 40 seconds by default. It is usually 4 times the hello interval but can be configured manually according to need.</p>
-</blockquote>
-</li>
-</ul>
-<h3 class="code-line" data-line-start=49 data-line-end=50 ><a id="Pros__Cons__49"></a>Pros &amp; Cons :</h3>
-<table class="table table-striped table-bordered">
-<thead>
-<tr>
-<th>Advantages</th>
-<th>Disadvantages</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Both IPv4 and IPv6 routed protocols</td>
-<td>requires an extra CPU process to run the SPF algorithm,</td>
-</tr>
-<tr>
-<td>Load balancing with equal-cost routes for the same destination</td>
-<td>requiring more RAM to store adjacency topology</td>
-</tr>
-<tr>
-<td>VLSM and route summarization</td>
-<td>more complex to set up</td>
-</tr>
-<tr>
-<td>Unlimited hop counts</td>
-<td>hard to troubleshoot.</td>
-</tr>
-<tr>
-<td>Trigger updates for fast convergence</td>
-<td></td>
-</tr>
-<tr>
-<td>A loop-free topology using SPF algorithm</td>
-<td></td>
-</tr>
-<tr>
-<td>Run-on most routers</td>
-<td></td>
-</tr>
-<tr>
-<td>Classless protocol</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 class="code-line" data-line-start=62 data-line-end=63 ><a id="Configuration_62"></a>Configuration</h2>
-<h5 class="code-line" data-line-start=64 data-line-end=65 ><a id="Open_shortest_path_first_OSPF_router_roles__64"></a>Open shortest path first (OSPF) router roles –</h5>
-<p class="has-line-data" data-line-start="65" data-line-end="66">An area is a group of contiguous networks and routers. Routers belonging to same area shares a common topology table and area I’d. The area I’d is associated with router’s interface as a router can belong to more than one area. There are some roles of router in OSPF:</p>
-<p class="has-line-data" data-line-start="67" data-line-end="68">!(<a href="https://media.geeksforgeeks.org/wp-content/uploads/rrf.png">https://media.geeksforgeeks.org/wp-content/uploads/rrf.png</a>)</p>
-<h5 class="code-line" data-line-start=69 data-line-end=70 ><a id="Backbone_router__69"></a>Backbone router –</h5>
-<p class="has-line-data" data-line-start="70" data-line-end="71">The area 0 is known as backbone area and the routers in area 0 are known as backbone routers. If the routers exists partially in the area 0then also it is a backbone router.</p>
-<h5 class="code-line" data-line-start=71 data-line-end=72 ><a id="Internal_router__71"></a>Internal router –</h5>
-<p class="has-line-data" data-line-start="72" data-line-end="73">An internal router is a router which have all of its interfaces in a single area.</p>
-<h5 class="code-line" data-line-start=73 data-line-end=74 ><a id="Area_Boundary_Router_ABR__73"></a>Area Boundary Router (ABR) –</h5>
-<p class="has-line-data" data-line-start="74" data-line-end="75">The router which connects backbone area with another area is called Area Boundary Router. It belongs to more than one area. The ABRs, therefore, maintain multiple link-state databases that describe both the backbone topology and the topology of the other areas.</p>
-<h5 class="code-line" data-line-start=75 data-line-end=76 ><a id="Area_Summary_Border_Router_ASBR__75"></a>Area Summary Border Router (ASBR) –</h5>
-<p class="has-line-data" data-line-start="76" data-line-end="77">When an OSPF router is connected to a different protocol like EIGRP or Border Gateway Protocol, or any other routing protocol then it is known as AS. The router which connects two different AS (in which one of the interfaces is operating OSPF) is known as Area Summary Border Router. These routers perform redistribution. ASBRs run both OSPF and another routing protocol, such as RIP or BGP. ASBRs advertise the exchanged external routing information throughout their AS.</p>
-<blockquote>
-<p class="has-line-data" data-line-start="78" data-line-end="79">Note – A router can be backbone router and Area Boundary Router at the same time i.e a router can perform more than one role at a time.</p>
-</blockquote>
-<h1 class="code-line" data-line-start=81 data-line-end=82 ><a id="Example_Topology__81"></a>Example Topology :</h1>
-<p class="has-line-data" data-line-start="82" data-line-end="83">!(<a href="https://p17.zdusercontent.com/attachment/15582446/oI9uEQxwvx2jYsW1oF6d2ez7c?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..4U6xg0LPLy-oZaWzcm-mkA.Zh7xE8prjjBmxVI9PvI81fz6QXZvZoH5CXlI8OfaOgoc0WNQ_hUqkl7VB-lGQTEPOfu6mV-ktuZQU6S16FZbT2fLHMaV2YLNg2E249ZiHJT4qI1ikxI-nQGwwYB0T6EadhF7ihzahSagGdX1UIdK-bxzAFzgVdQfvjsOPTO9maHmVOAbMnvS1XHkzxB1-xlmm-zXlUUdWnJn7HgM9Wt58rNiyPHQ4SE6LNL6b9p9QEkMBjsD3ss8Bxn_T1MzDz7m3N3Gb18-PGurpvGrNhfxovDjALpQymHL8G36NppIwznef__8tD-vUzPH2RABCW2V.9HbftRJZUcGBtFR5aOnPtg">https://p17.zdusercontent.com/attachment/15582446/oI9uEQxwvx2jYsW1oF6d2ez7c?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0…4U6xg0LPLy-oZaWzcm-mkA.Zh7xE8prjjBmxVI9PvI81fz6QXZvZoH5CXlI8OfaOgoc0WNQ_hUqkl7VB-lGQTEPOfu6mV-ktuZQU6S16FZbT2fLHMaV2YLNg2E249ZiHJT4qI1ikxI-nQGwwYB0T6EadhF7ihzahSagGdX1UIdK-bxzAFzgVdQfvjsOPTO9maHmVOAbMnvS1XHkzxB1-xlmm-zXlUUdWnJn7HgM9Wt58rNiyPHQ4SE6LNL6b9p9QEkMBjsD3ss8Bxn_T1MzDz7m3N3Gb18-PGurpvGrNhfxovDjALpQymHL8G36NppIwznef__8tD-vUzPH2RABCW2V.9HbftRJZUcGBtFR5aOnPtg</a>)</p>
+# OSPF
+## _What is OSPF_
+
+Open shortest path first (OSPF) is a link-state routing protocol that is used to find the best path between the source and the destination router using its own shortest path first (SPF) algorithm.
+
+The Interior Gateway Protocol (IGP), i.e., the protocol which aims at moving the packet within a large autonomous system or routing domain. It is a network layer protocol that works on protocol number 89 and uses AD value 110. OSPF uses multicast address 224.0.0.5 for normal communication and 224.0.0.6 for update to designated router(DR)/Backup Designated Router (BDR).
+
+- ### Criteria :
+    To form neighbourship in OSPF, there is a criterion for both the routers: 
+     - It should be present in the same area.
+    -   The router I’d be unique.
+    -   The subnet mask should be the same.
+    - Hello, and the dead timer should be the same.
+   -  The stub flag must match.
+   -  Authentication must match.
+  
+ 
+```sh
+ OSPF supports NULL, plain text, MD5 authentication
+```
+> Note –  Both the routers (neighbors) should have some type of authentication enabled. e.g- if one neighbor has MD5 authentication enabled then others should also have MD5 authentication enabled.
+
+## OSPF messages 
+OSPF uses certain messages for the communication between the routers operating OSPF.
+
+- Hello message :
+    These are keep-alive messages used for neighbor discovery /recovery. These are exchanged every 10 seconds. This includes the following information: Router I’d, Hello/dead interval, Area I’d, Router priority, DR and BDR IP address, authentication data.
+
+- Database Description (DBD) :
+    It is the OSPF route of the router. This contains the topology of an AS or an area (routing domain).
+ - Link state request (LSR) :
+    When a router receives DBD, it compares it with its own DBD. If the DBD received has some more updates than its own DBD then LSR is being sent to its neighbor.
+-  Link state update (LSU) :
+    When a router receives LSR, it responds with an LSU message containing the details requested.
+- Link state acknowledgement :
+    This provides reliability to the link-state exchange process. It is sent as the acknowledgement of LSU.
+- Link state advertisement (LSA) :
+    It is an OSPF data packet that contains link-state routing information, shared only with the routers to which adjacency has been formed.
+
+### Timers 
+- Hello timer :
+    The interval in which the OSPF router sends a hello message on an interface.
+    >  It is 10 seconds by default. 
+- Dead timer :
+    The interval in which the neighbor will be declared dead if it is not able to send the hello packet.
+    > It is 40 seconds by default. It is usually 4 times the hello interval but can be configured manually according to need.
+
+
+
+### Pros & Cons :
+| Advantages  | Disadvantages |
+| ------ | ------ |
+| Both IPv4 and IPv6 routed protocols  |  requires an extra CPU process to run the SPF algorithm, |
+| Load balancing with equal-cost routes for the same destination  |  requiring more RAM to store adjacency topology |
+| VLSM and route summarization  |  more complex to set up  |
+| Unlimited hop counts  |  hard to troubleshoot. |
+| Trigger updates for fast convergence  |   |
+|A loop-free topology using SPF algorithm |   |
+| Run-on most routers |   |
+|Classless protocol  |   |
+
+
+## Configuration 
+
+##### Open shortest path first (OSPF) router roles –
+An area is a group of contiguous networks and routers. Routers belonging to same area shares a common topology table and area I’d. The area I’d is associated with router’s interface as a router can belong to more than one area. There are some roles of router in OSPF:
+
+!(https://media.geeksforgeeks.org/wp-content/uploads/rrf.png)
+
+##### Backbone router – 
+The area 0 is known as backbone area and the routers in area 0 are known as backbone routers. If the routers exists partially in the area 0then also it is a backbone router.
+##### Internal router – 
+An internal router is a router which have all of its interfaces in a single area.
+##### Area Boundary Router (ABR) – 
+The router which connects backbone area with another area is called Area Boundary Router. It belongs to more than one area. The ABRs, therefore, maintain multiple link-state databases that describe both the backbone topology and the topology of the other areas.
+##### Area Summary Border Router (ASBR) –
+When an OSPF router is connected to a different protocol like EIGRP or Border Gateway Protocol, or any other routing protocol then it is known as AS. The router which connects two different AS (in which one of the interfaces is operating OSPF) is known as Area Summary Border Router. These routers perform redistribution. ASBRs run both OSPF and another routing protocol, such as RIP or BGP. ASBRs advertise the exchanged external routing information throughout their AS.
+
+> Note – A router can be backbone router and Area Boundary Router at the same time i.e a router can perform more than one role at a time.
+
+
+# Example Topology :
+!(https://p17.zdusercontent.com/attachment/15582446/oI9uEQxwvx2jYsW1oF6d2ez7c?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..4U6xg0LPLy-oZaWzcm-mkA.Zh7xE8prjjBmxVI9PvI81fz6QXZvZoH5CXlI8OfaOgoc0WNQ_hUqkl7VB-lGQTEPOfu6mV-ktuZQU6S16FZbT2fLHMaV2YLNg2E249ZiHJT4qI1ikxI-nQGwwYB0T6EadhF7ihzahSagGdX1UIdK-bxzAFzgVdQfvjsOPTO9maHmVOAbMnvS1XHkzxB1-xlmm-zXlUUdWnJn7HgM9Wt58rNiyPHQ4SE6LNL6b9p9QEkMBjsD3ss8Bxn_T1MzDz7m3N3Gb18-PGurpvGrNhfxovDjALpQymHL8G36NppIwznef__8tD-vUzPH2RABCW2V.9HbftRJZUcGBtFR5aOnPtg)
+
+
+
+
